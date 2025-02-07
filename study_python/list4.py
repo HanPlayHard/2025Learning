@@ -1,5 +1,4 @@
 # 列表 list 4, tuple
-from Tools.demo.sortvisu import demosort
 
 players = ["charles", "martina", "michael", "florence", "eli"]
 print(players[0:3])  # ['charles', 'martina', 'michael']
