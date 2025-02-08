@@ -68,3 +68,15 @@ print(greet2("hanplayhard", "22", "33", "44", "55"))
 import math
 
 print(math.sqrt(16))  # 4.0
+
+
+# 二、核心数据结构
+# 1.	列表（可变序列）;  用小括号定义变为： 不可修改的元组 tuple
+fruits2 = ["apple", "banana", "cherry"]
+fruits2.append("orange")  # 添加元素
+print(fruits2[1:3])  # 切片输出 ['banana', 'cherry']
+
+# 2.	字典（键值对集合）
+user = {"name": "hanplayhard", "age": 24, "email": "hanplayhard@example.com"}
+print(user["name"])  # hanplayhard
+print(user.get("age", 0))  # 安全获取值  24
