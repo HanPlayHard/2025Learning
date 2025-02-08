@@ -42,32 +42,41 @@ greet_user2(username1="1111111")
 Hello, 1111111!
 Hi, Default_Username.
 """
+
+
 # =================================
 def get_formatted_name(first_name, last_name):
     """Returns a clean name"""
-    full_name = first_name + ' ' +last_name
+    full_name = first_name + " " + last_name
     return full_name.title()
 
-a_cool_man=get_formatted_name('han','playhard')
-print(a_cool_man) # Han Playhard
+
+a_cool_man = get_formatted_name("han", "playhard")
+print(a_cool_man)  # Han Playhard
+
 
 # ================================= dictionary
-def build_person(first_name, last_name,p3='cool',p4='inspirational'):
+def build_person(first_name, last_name, p3="cool", p4="inspirational"):
     """Returns a dictionary containing information about a person"""
-    person = {'first':first_name,'last':last_name,'image':p3,'character':p4}
+    person = {"first": first_name, "last": last_name, "image": p3, "character": p4}
     return person
-my1=build_person('han','playhard')
+
+
+my1 = build_person("han", "playhard")
 print(my1)
 # {'first': 'han', 'last': 'playhard', 'image': 'cool',
 # 'character': 'inspirational'}
+
 
 # ================================= list
 def greet_users(names):
     """Send a simple greeting to each user in the list"""
     for name in names:
-        msg="Hello, " + name.title() + "!"
+        msg = "Hello, " + name.title() + "!"
         print(msg)
-usernames = ['hanplayhard','man','hahahaha','love']
+
+
+usernames = ["hanplayhard", "man", "hahahaha", "love"]
 greet_users(usernames)
 """
 Hello, Hanplayhard!
@@ -84,14 +93,18 @@ When you pass a list to a function, the function can modify it.
 What you do to the list inside the function Any chawnges to is permanent,
 which allows you to process large amounts of data efficiently.
 """
+
+
 def greet_users2(names2):
     """Send a simple greeting to each user in the list"""
     for name in names2:
-        if name=='love':
-            names2[3]='love2'
-        msg="Hello, " + name.title() + "!"
+        if name == "love":
+            names2[3] = "love2"
+        msg = "Hello, " + name.title() + "!"
         print(msg)
-usernames2 = ['hanplayhard','man','hahahaha','love']
+
+
+usernames2 = ["hanplayhard", "man", "hahahaha", "love"]
 greet_users2(usernames2)
 print(usernames2)
 """
@@ -125,13 +138,17 @@ Python creates an empty dictionary called user_info and
 takes all the name-value pairs it receives
 All wrapped up in this dictionary.
 """
+
+
 def case1(p1, p2, **user_info):
     profile = {}
-    profile['first_name'] = p1
-    profile['last_name'] = p2
+    profile["first_name"] = p1
+    profile["last_name"] = p2
     for key, value in user_info.items():
         profile[key] = value
     return profile
-user_profile = case1('aa', 'bbb',p_c='cool',p_d='damn')
+
+
+user_profile = case1("aa", "bbb", p_c="cool", p_d="damn")
 print(user_profile)
 # {'first_name': 'aa', 'last_name': 'bbb', 'p_c': 'cool', 'p_d': 'damn'}
