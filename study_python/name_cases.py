@@ -55,3 +55,16 @@ print(3 / 2.0)  # 1.5
 print(3.0 / 2.0)  # 1.5
 print(4 * 2)  # 8
 print(32 / 4)  # 8.0
+
+# 基础补充，虽然好像没什么用
+# Basic supplement, although it doesn't seem to be useful
+print(name1.rstrip())
+#  han play hard
+print(name1.lstrip())
+# han play hard
+print(name1.strip())
+# han play hard
+print(name1.removeprefix(" han"))
+#  play hard
+print(name1.removesuffix("play hard "))
+#  han
