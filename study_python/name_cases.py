@@ -30,7 +30,7 @@
 # Namespaces are one honking great idea -- let's do more of those!#命名空间是一个非常棒的主意——让我们做更多的命名空间！
 
 # fmt:on
-# Ctrl + Alt + L      Format
+# Ctrl + Alt + L      Format(in PyCharm)
 user_name = "Hello man, would you like to learn some Python today?"
 print(user_name)
 
