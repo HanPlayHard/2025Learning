@@ -11,5 +11,12 @@ class Settings:
         # 飞船的设置
         self.ship_speed = 5.0
 
+        # 子弹设置
+        self.bullet_speed = 10.0
+        self.bullet_width = 3
+        self.bullet_height = 15
+        self.bullet_color = (60, 60, 60)
+        self.bullets_allowed = 3
+
 
 my_file_location = "study_python/Project/alien_invasion/"
