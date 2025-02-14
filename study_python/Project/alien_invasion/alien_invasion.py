@@ -4,6 +4,8 @@ from settings import Settings
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from time import sleep
+from game_stats import GameStats
 
 
 class AlienInvasion:
@@ -25,6 +27,8 @@ class AlienInvasion:
         # self.settings.screen_height = self.screen.get_rect().height
 
         pygame.display.set_caption("Alien Invasion")
+        # 创建一个用于存储游戏统计信息的实例
+        self.stats = GameStats(self)
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
@@ -32,6 +36,7 @@ class AlienInvasion:
         self._create_fleet()
         # 设置背景色
         self.bg_color = self.settings.bg_color
+        self.game_active = True
 
     def run_game(self):
         """开始游戏的主循环"""
@@ -41,35 +46,36 @@ class AlienInvasion:
             #     if event.type == pygame.QUIT:
             #         sys.exit()
             self._check_events()
-            self.ship.update()
-            # self.bullets.update()
-            # 每次循环时都重绘屏幕
-            # self.screen.fill(self.bg_color)
+            if self.game_active:
+                self.ship.update()
+                # self.bullets.update()
+                # 每次循环时都重绘屏幕
+                # self.screen.fill(self.bg_color)
 
-            # self.screen.fill(self.settings.bg_color)
-            # self.ship.blitme
+                # self.screen.fill(self.settings.bg_color)
+                # self.ship.blitme
 
-            # 让最近绘制的屏幕可见
-            # pygame.display.flip()
+                # 让最近绘制的屏幕可见
+                # pygame.display.flip()
 
-            #             # 删除已消失的子弹
-            #             """
-            # ! 在使用 for 循环遍历列表（或 Pygame 编组）时，Python 要求该列表的
-            # 长度在整个循环中保持不变。这意味着不能从 for 循环遍历的列表或编
-            # 组中删除元素，因此必须遍历编组的副本。
-            # When you use a for loop to loop through a list (or Pygame group),
-            # Python requires the list's
-            # The length remains the same throughout the cycle.
-            # This means you can't loop over a list or compile from a for loop
-            # Elements are removed from a group,
-            # so a copy of the group must be iterated.
-            #             """
-            #             for bullet in self.bullets.copy():  # !
-            #                 if bullet.rect.bottom <= 0:
-            #                     self.bullets.remove(bullet)
-            #             # print(len(self.bullets))
-            self._update_bullets()
-            self._update_aliens()
+                #             # 删除已消失的子弹
+                #             """
+                # ! 在使用 for 循环遍历列表（或 Pygame 编组）时，Python 要求该列表的
+                # 长度在整个循环中保持不变。这意味着不能从 for 循环遍历的列表或编
+                # 组中删除元素，因此必须遍历编组的副本。
+                # When you use a for loop to loop through a list (or Pygame group),
+                # Python requires the list's
+                # The length remains the same throughout the cycle.
+                # This means you can't loop over a list or compile from a for loop
+                # Elements are removed from a group,
+                # so a copy of the group must be iterated.
+                #             """
+                #             for bullet in self.bullets.copy():  # !
+                #                 if bullet.rect.bottom <= 0:
+                #                     self.bullets.remove(bullet)
+                #             # print(len(self.bullets))
+                self._update_bullets()
+                self._update_aliens()
             self._update_screen()
 
             self.clock.tick(60)
@@ -126,12 +132,38 @@ class AlienInvasion:
         for bullet in self.bullets.copy():  # !
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
+        # # 检查是否有子弹击中了外星人
+        # # 如果是，就删除相应的子弹和外星人
+        # collisions = pygame.sprite.groupcollide(
+        #     self.bullets, self.aliens, True, True
+        # )
+        # if not self.aliens:
+        #     # 删除现有的子弹并新建一个新的外星舰队
+        #     self.bullets.empty()
+        #     self._create_fleet()
+        self._check_bullet_alien_collisions()
+
+    def _check_bullet_alien_collisions(self):
+        """响应子弹和外星人的碰撞"""
+        # 删除击中的子弹和外星人
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+        if not self.aliens:
+            # 删除现有的子弹并新建一个外星舰队
+            self.bullets.empty()
+            self._create_fleet()
 
     def _update_aliens(self):
         """更新外星舰队中所有外星人的位置"""
         """检查是否有外星人位于屏幕边缘，并更新整个外星舰队的位置"""
         self._check_fleet_edges()
         self.aliens.update()
+
+        # 检测外星人和飞船之间的碰撞
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            # print("Ship hit!!!")
+            self._ship_hit()
+        # 检查是否有外星人到达屏幕底端
+        self._check_aliens_bottom()
 
     def _create_fleet(self):
         """创建一个外星舰队"""
@@ -179,6 +211,33 @@ class AlienInvasion:
         for alien in self.aliens.sprites():
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
+
+    def _ship_hit(self):
+        """响应飞船和外星人碰撞"""
+        if self.stats.ships_left > 0:
+            # 将 ships_left 减 1
+            self.stats.ships_left -= 1
+
+            # 清空外星人列表和子弹列表
+            self.bullets.empty()
+            self.aliens.empty()
+
+            # 创建一个新的外星舰队，并将飞船放在屏幕底部的中央
+            self._create_fleet()
+            self.ship.center_ship()
+
+            # 暂停
+            sleep(0.5)
+        else:
+            self.game_active = False
+
+    def _check_aliens_bottom(self):
+        """检查是否有外星人到达了屏幕底端"""
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= self.screen.get_rect().bottom:
+                # 像飞船被撞一样处理
+                self._ship_hit()
+                break
 
     def _update_screen(self):
         """更新屏幕上的图像，并切换到新屏幕"""
