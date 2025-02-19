@@ -1,0 +1,85 @@
+Django 是最流行的 Python Web 框架
+
+先为这个项目制定规范，再为使用的数据定义模型
+
+创建虚拟环境
+python -m venv ll_env 
+
+$ py -m venv myproject # Windows
+$ python -m venv myproject # Unix/MacOS
+
+激活虚拟环境(linux ?)
+source ll_env/bin/activate
+激活虚拟环境：Windows 系统，请使用命令 
+ll_env\Scripts\activate
+
+
+以下命令来激活环境
+# Windows:
+myproject\Scripts\activate.bat
+# Unix/MacOS:
+source myproject/bin/activate
+
+
+停止使用虚拟环境，可执行命令 deactivate
+
+在虚拟环境中工作，因此不管使用什么系统，安装 Django 的
+命令都相同：不需要指定标志 --user，也无须使用像 python -m pip
+install package_name 这样较长的命令。别忘了，Django 仅在虚拟
+环境 ll_env 处于活动状态时才可用。
+
+更新 pip 并安装 Django：
+pip install --upgrade pip  或者 pip install --isolated  --upgrade pip
+pip install django    或者    pip install --isolated  --upgrade django
+
+
+正常环境：安装 Django
+# Windows:
+(myproject) C:\Users\Name> py -m pip install Django
+# Unix/MacOS:
+(myproject) ... $ python -m pip install Django
+
+
+新建一个项目：
+django-admin startproject ll_project .
+
+运行命令 ls 查看文件夹内容（在 Windows 系统上为 dir）
+
+为了给项目“学习笔记”创建数据库，要在虚拟
+环境处于活动状态的情况下执行下面的命令：python manage.py migrate
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+问题：
+https://blog.csdn.net/caijungan/article/details/136455367
+1. 问题的提出
+这些天，无意中发现，使用venv创建python虚拟环境并激活虚拟环境后，使用如下命令
+无法把扩展库安装到虚拟环境对应的扩展库目录下
+(xxx/<虚拟环境名>/Lib/site-packages)：
+(虚拟环境名)$ pip install 扩展库名
+这是什么原因？
+后来发现，原来该命令默认情况下，并非将扩展库安装到虚拟环境目录，
+而是安装到由python全局变量USER_SITE所指定的目录，于是导致与期望不符。
+如何查看USER_SITE指向的目录：
+python -m site
+
+2. 问题的解决
+目前，最简单的解决方法就是，在安装第三方扩展库时，使用–isolated选项：
+pip --isolated install xxx
+这个命令，将会把所有环境变量与当前虚拟环境隔离，从而使xxx能安装到当前虚拟环境。
+
+（M：我就是更改了全局变量，指定的G盘，防止pip安装在C盘，所以虚拟环境（D盘某处）
+的某库安装 仍然安装在环境变量指定的G盘中，以后我就用这些命令了：
+pip install --isolated  --upgrade django   独立的，升级/覆盖 的安装，）
