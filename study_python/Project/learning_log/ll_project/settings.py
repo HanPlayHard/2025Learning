@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # 我的应用程序
     "learning_logs",
+    "accounts",
     # Django默认添加的应用程序
     "django.contrib.admin",
     "django.contrib.auth",
@@ -124,3 +125,8 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# 我的设置
+LOGIN_REDIRECT_URL = "learning_logs:index"  # 用户成功登录后将其重定向到xx URL
+LOGOUT_REDIRECT_URL = "learning_logs:index"  # 用户单机注销按钮 将其重定向到xx URL
+LOGIN_URL = 'accounts:login' #如果用户未登录,重定向到登录页面
