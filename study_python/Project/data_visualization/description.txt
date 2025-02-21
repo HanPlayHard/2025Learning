@@ -1,0 +1,14 @@
+数据可视化:
+指的是通过可视化表示来探索和呈现数据集内的规律。它与数据分析紧密相关.
+数据分析:
+指的是使用代码来探索数据集内的规律和关联。
+数据集:
+既可以是用一行代码就能装下的小型数值列表，也可以是数万亿字节、包含多种信息的数据。
+
+工具, Matplotlib，它是一个数学绘图库.
+
+安装 Matplotlib
+
+py -m pip install --user matplotlib
+py -m pip install  matplotlib (用这个命令,由于我修改了USER_SITE,
+ERROR: Can not combine '--user' and '--target')
