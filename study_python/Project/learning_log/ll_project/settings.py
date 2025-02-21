@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     "learning_logs",
     "accounts",
     # 第三方应用程序
-    'django_bootstrap5',
+    "django_bootstrap5",
     # Django默认添加的应用程序
     "django.contrib.admin",
     "django.contrib.auth",
@@ -60,7 +60,7 @@ ROOT_URLCONF = "ll_project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -131,4 +131,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # 我的设置
 LOGIN_REDIRECT_URL = "learning_logs:index"  # 用户成功登录后将其重定向到xx URL
 LOGOUT_REDIRECT_URL = "learning_logs:index"  # 用户单机注销按钮 将其重定向到xx URL
-LOGIN_URL = 'accounts:login' #如果用户未登录,重定向到登录页面
+LOGIN_URL = "accounts:login"  # 如果用户未登录,重定向到登录页面
