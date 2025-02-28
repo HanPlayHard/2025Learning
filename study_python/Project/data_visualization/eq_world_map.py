@@ -74,7 +74,7 @@ fig = px.scatter(
     color="震级", #从蓝色到红色再到黄色，数值越小标记越蓝，而数值越大则标记越黄
     hover_name='位置'
 )
-fig.write_html("global_earthquakes.html")
+# fig.write_html("global_earthquakes.html")
 fig.show()
 
 

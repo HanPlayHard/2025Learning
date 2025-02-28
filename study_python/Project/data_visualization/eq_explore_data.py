@@ -49,7 +49,7 @@ fig = px.scatter(
     size_max=10,
     # size 参数来指定散点图中每个标记的尺寸
 )
-fig.write_html("global_earthquakes.html")
+# fig.write_html("global_earthquakes.html")
 fig.show()
 
 """
