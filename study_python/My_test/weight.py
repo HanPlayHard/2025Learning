@@ -4,8 +4,15 @@ from datetime import datetime
 import tkinter as tk
 from tkinter import messagebox
 import numpy as np
+
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib
+matplotlib.use("TkAgg")  # Force safe backend for GUI
+
+import logging
+logging.basicConfig(filename="my_weight_app.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+
 
 plt.rcParams['font.family'] = 'Microsoft YaHei'
 
@@ -13,9 +20,18 @@ plt.rcParams['font.family'] = 'Microsoft YaHei'
 DATA_FOLDER = "weight_data"
 DATA_FILE = os.path.join(DATA_FOLDER, "daily_weights.csv")
 ICON_ICO_PATH = "./Han_icon.ico"  # Use .ico for Windows
+ICON_PNG_PATH = "./Han_icon.ico"  # Use .png for Windows
 icon_img_global = None
 
 open_charts = []
+
+def center_window(window, width, height):
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+    x = (screen_width // 2) - (width // 2)
+    y = (screen_height // 2) - (height // 2)
+    window.geometry(f"{width}x{height}+{x}+{y}")
+
 
 # Ensure data folder exists
 os.makedirs(DATA_FOLDER, exist_ok=True)
@@ -43,6 +59,11 @@ def plot_weight_chart_matplotlib(window):
         return
 
     df = pd.read_csv(DATA_FILE)
+    df.columns = df.columns.str.strip()  # 清除列名周围的空格
+    if "Date" not in df.columns or "Weight" not in df.columns:
+        messagebox.showerror("CSV Format Error", "CSV file must have columns: Date,Weight")
+        return
+
     df['Date'] = pd.to_datetime(df['Date'])
     df = df.sort_values('Date')
     df = df.dropna()
@@ -96,7 +117,11 @@ def plot_weight_chart_matplotlib(window):
 
     # Embed in Tkinter window
     top = tk.Toplevel(window)
+    top.withdraw()  # Hide the window while configuring
     top.title("体重图")
+    # top.geometry("1400x800")  # Set initial size of chart window
+    center_window(top, 1400, 800)
+    top.deiconify()  # Show the window after setting position
     def set_window_icon(window):
         global icon_img_global
         try:
@@ -113,13 +138,13 @@ def plot_weight_chart_matplotlib(window):
     #     # print("图表窗口关闭.")
     #     top.destroy()
     # top.protocol("WM_DELETE_WINDOW", close_chart)
-    top.protocol("WM_DELETE_WINDOW", top.destroy)
 
     open_charts.append(top)  # Track this window
 
     canvas = FigureCanvasTkAgg(fig, master=top)
     canvas.draw()
     canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+    top.protocol("WM_DELETE_WINDOW", top.destroy)
 
 # GUI application
 def run_gui():
@@ -133,9 +158,14 @@ def run_gui():
             messagebox.showerror("无效输入", "请输入有效数字.")
 
     def on_show_chart():
-        plot_weight_chart_matplotlib(root)
+        try:
+            plot_weight_chart_matplotlib(root)
+        except Exception as e:
+            logging.exception("显示图表失败")
+            messagebox.showerror("图表错误", "无法显示图表. 请查看日志细节my_weight_app.log.")           
 
     root = tk.Tk()
+    root.withdraw()  # Hide the window while configuring
     root.title("体重记录-汉要硬玩")
     # Set window icon
     root.iconbitmap(ICON_ICO_PATH)
@@ -150,10 +180,13 @@ def run_gui():
         import matplotlib.pyplot as plt
         plt.close('all')
         root.destroy()
-    root.protocol("WM_DELETE_WINDOW", on_main_close)
+    
 
-    root.geometry("350x220")
+    # root.geometry("350x220")
+    center_window(root, 350, 220) #居中
+    root.deiconify()  # Show the window after setting position
     root.configure(bg='#1e1e1e')
+    root.protocol("WM_DELETE_WINDOW", on_main_close)
 
 
 
