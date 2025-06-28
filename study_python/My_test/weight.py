@@ -12,6 +12,7 @@ matplotlib.use("TkAgg")  # Force safe backend for GUI
 
 import logging
 logging.basicConfig(filename="my_weight_app.log", level=logging.CRITICAL, format="%(asctime)s - %(levelname)s - %(message)s")
+import matplotlib.dates as mdates
 
 
 plt.rcParams['font.family'] = 'Microsoft YaHei'
@@ -38,7 +39,7 @@ os.makedirs(DATA_FOLDER, exist_ok=True)
 
 # Function to add a new weight entry
 def add_weight_entry(weight):
-    today = datetime.now().strftime("%y-%m-%d")
+    today = datetime.now().strftime("%y/%m/%d")
     new_entry = pd.DataFrame([[today, weight]], columns=["Date", "Weight"])
 
     if os.path.exists(DATA_FILE):
@@ -64,7 +65,7 @@ def plot_weight_chart_matplotlib(window):
         messagebox.showerror("CSV Format Error", "CSV file must have columns: Date,Weight")
         return
 
-    df['Date'] = pd.to_datetime(df['Date'])
+    df['Date'] = pd.to_datetime(df['Date'], format="%y/%m/%d", errors='coerce')
     df = df.sort_values('Date')
     df = df.dropna()
     df = df[df['Weight'].apply(lambda x: pd.to_numeric(x, errors='coerce')).notnull()]
@@ -73,10 +74,13 @@ def plot_weight_chart_matplotlib(window):
     weights = df['Weight'].astype(float)
 
     # Create matplotlib figure
-    fig, ax = plt.subplots(figsize=(8, 4), dpi=100)
+    fig, ax = plt.subplots(figsize=(8, 4), dpi=120)
     line, = ax.plot(dates, weights, color='deepskyblue', linewidth=2.5, label='趋势')
     scatter = ax.scatter(dates, weights, color='black', s=50, edgecolors='white', label='记录点')
 
+    # Set the date format for the x-axis
+    date_format = mdates.DateFormatter('%y/%m/%d')
+    ax.xaxis.set_major_formatter(date_format)
 
     ax.set_title("体重变化图", fontsize=16, fontweight='bold')
     ax.set_xlabel("日期")
@@ -84,6 +88,9 @@ def plot_weight_chart_matplotlib(window):
     ax.grid(True, linestyle='--', alpha=0.5)
     fig.autofmt_xdate()
     ax.legend()
+
+    # Set the x-axis labels to horizontal
+    plt.xticks(rotation=0)
 
     # Tooltip effect
     annot = ax.annotate("", xy=(0,0), xytext=(15,15), textcoords="offset points",
@@ -93,7 +100,7 @@ def plot_weight_chart_matplotlib(window):
     def update_annot(ind):
         x, y = scatter.get_offsets()[ind["ind"][0]]
         annot.xy = (x, y)
-        text = f"{df['Date'].iloc[ind['ind'][0]].strftime('%Y-%m-%d')}: {weights.iloc[ind['ind'][0]]:.2f} kg"
+        text = f"{df['Date'].iloc[ind['ind'][0]].strftime('%y/%m/%d')}: {weights.iloc[ind['ind'][0]]:.2f} kg"
         annot.set_text(text)
         annot.get_bbox_patch().set_facecolor('skyblue')
         annot.get_bbox_patch().set_alpha(0.9)
