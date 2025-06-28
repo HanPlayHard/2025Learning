@@ -11,7 +11,7 @@ import matplotlib
 matplotlib.use("TkAgg")  # Force safe backend for GUI
 
 import logging
-logging.basicConfig(filename="my_weight_app.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(filename="my_weight_app.log", level=logging.CRITICAL, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
 plt.rcParams['font.family'] = 'Microsoft YaHei'
