@@ -38,7 +38,7 @@ os.makedirs(DATA_FOLDER, exist_ok=True)
 
 # Function to add a new weight entry
 def add_weight_entry(weight):
-    today = datetime.now().strftime("%Y-%m-%d")
+    today = datetime.now().strftime("%y-%m-%d")
     new_entry = pd.DataFrame([[today, weight]], columns=["Date", "Weight"])
 
     if os.path.exists(DATA_FILE):
